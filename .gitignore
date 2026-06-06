@@ -1,0 +1,83 @@
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# =========================
+# Environment Variables
+# =========================
+
+.env
+
+# =========================
+# IDE
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# Operating System
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+# Pytest
+# =========================
+
+.pytest_cache/
+
+# =========================
+# Coverage
+# =========================
+
+.coverage
+htmlcov/
+
+# =========================
+# Playwright
+# =========================
+
+playwright/screenshots/*
+!playwright/screenshots/.gitkeep
+
+playwright/auth/*
+!playwright/auth/.gitkeep
+
+# =========================
+# Reports
+# =========================
+
+reports/*
+!reports/.gitkeep
+
+# =========================
+# Temporary Files
+# =========================
+
+*.log
+*.tmp
+
+# =========================
+# Build
+# =========================
+
+dist/
+build/
+
+# =========================
+# Local Job Data
+# =========================
+
+data/jobs/*
+!data/jobs/.gitkeep
