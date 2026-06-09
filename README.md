@@ -1,8 +1,8 @@
 # Autonomous Career Scout
 
-Autonomous Career Scout is an Agentic AI project that autonomously discovers, analyzes, evaluates, and recommends job opportunities.
+Autonomous Career Scout is an Agentic AI project designed to discover, analyze, evaluate, and recommend job opportunities.
 
-The goal is not simply to analyze job URLs provided by a user. The long-term vision is to build a real autonomous career assistant capable of receiving a goal, deciding which actions to take, collecting opportunities, reasoning about them, and generating recommendations with minimal human intervention.
+The long-term vision is to build a career intelligence platform capable of collecting opportunities from multiple sources, analyzing compatibility against a candidate profile, tracking career trends, identifying skill gaps, and supporting career decisions through AI-powered insights.
 
 ---
 
@@ -16,71 +16,131 @@ Find remote QA Engineer jobs in Canada.
 
 The user should not need to manually search for jobs and provide URLs.
 
-The system is responsible for:
+The system will be responsible for:
 
-- Discovering opportunities
-- Collecting job data
-- Evaluating compatibility
-- Ranking opportunities
-- Generating recommendations
-- Producing reports
+* Discovering opportunities
+* Collecting job data
+* Evaluating compatibility
+* Ranking opportunities
+* Generating recommendations
+* Tracking career progress
+* Producing reports and insights
+
+---
+
+# Current Capabilities
+
+The current version already supports:
+
+* Resume parsing from DOCX files
+* Candidate profile extraction
+* Job description parsing
+* Skill extraction
+* Match score calculation
+* Career recommendations
+* Application decision analysis
+* Opportunity analysis
+* OpenAI-powered explanations
+* JSON report generation
+* PostgreSQL persistence
+* Dockerized database infrastructure
 
 ---
 
 # Objectives
 
-- Search for job opportunities automatically
-- Extract and normalize job descriptions
-- Analyze job requirements using AI
-- Compare job requirements against a candidate profile
-- Classify opportunities as High, Medium, or Low Match
-- Generate detailed reports with reasoning traces
-- Build an autonomous career assistant using Agentic AI concepts
+* Search for job opportunities automatically
+* Extract and normalize job descriptions
+* Analyze job requirements using AI
+* Compare job requirements against a candidate profile
+* Classify opportunities as High, Medium, or Low Match
+* Generate detailed reports with reasoning traces
+* Store historical analyses
+* Build an autonomous career assistant using Agentic AI concepts
 
 ---
 
 # High-Level Architecture
 
 ```text
-User Goal
-    │
-    ▼
-CareerScoutAgent
-    │
-    ├── Search Tool
-    ├── Scrape Tool
-    ├── Parse Tool
-    ├── Match Tool
-    ├── OpenAI Analysis Tool
-    └── Report Tool
-    │
-    ▼
+Resume (.docx)
+        │
+        ▼
+Resume Parser
+        │
+        ▼
+Candidate Profile
+        │
+        ▼
+Job Parser
+        │
+        ▼
+Match Engine
+        │
+        ▼
+Career Advisor Agent
+        │
+        ▼
+Decision Agent
+        │
+        ▼
+Opportunity Analysis Agent
+        │
+        ▼
+OpenAI Opportunity Explainer
+        │
+        ▼
+Report Generator
+        │
+        ▼
 PostgreSQL
-    │
-    ▼
+        │
+        ▼
 Reports
 ```
 
 ---
 
-# Agent Reasoning Loop
+# Current Execution Flow
 
 ```text
-Goal
-↓
-Think
-↓
-Choose Tool
-↓
-Execute Tool
-↓
-Observe Result
-↓
-Update Context
-↓
-Goal Achieved?
-    ├── No → Continue
-    └── Yes → Generate Report
+Resume (.docx)
+        │
+        ▼
+Resume Parser
+
+Jobs (.txt)
+        │
+        ▼
+Job Parser
+
+        ▼
+
+MatchResult
+
+        ▼
+
+CareerRecommendation
+
+        ▼
+
+ApplicationDecision
+
+        ▼
+
+OpportunityAnalysis
+
+        ▼
+
+OpenAI Explanation
+
+        ▼
+
+opportunities.json
+
+        ▼
+
+PostgreSQL
 ```
 
 ---
@@ -89,70 +149,78 @@ Goal Achieved?
 
 ## Python
 
-Main programming language used across the project.
-
-## Playwright
-
-Responsible for:
-
-- Navigating websites
-- Searching job opportunities
-- Collecting job links
-- Extracting HTML content
-
-## BeautifulSoup + lxml
-
-Responsible for:
-
-- Cleaning HTML
-- Extracting meaningful text
-- Structuring page content
-
-## Pydantic
-
-Responsible for:
-
-- Data validation
-- Domain models
-- Structured objects
-
-Examples:
-
-```text
-JobPosting
-CandidateProfile
-JobMatchResult
-```
+Primary programming language.
 
 ## OpenAI
 
 Responsible for:
 
-- Reasoning
-- Recommendations
-- Opportunity analysis
-- Career insights
+* Opportunity explanations
+* Recommendations
+* Career insights
+* Future reasoning workflows
 
 ## PostgreSQL
 
 Responsible for:
 
-- Job history
-- Match history
-- Execution history
-- Future memory layer
+* Opportunity history
+* Match history
+* Execution history
+* Future memory layer
+
+## Docker
+
+Responsible for:
+
+* Local infrastructure
+* PostgreSQL containerization
+* Reproducible development environment
+
+## Pydantic
+
+Responsible for:
+
+* Domain models
+* Validation
+* Structured objects
+
+Examples:
+
+```text
+CandidateProfile
+MatchResult
+CareerRecommendation
+ApplicationDecision
+OpportunityAnalysis
+```
+
+## Playwright (Future Phase)
+
+Will be responsible for:
+
+* LinkedIn navigation
+* Indeed navigation
+* Monster navigation
+* Job collection
+* Automated discovery
+
+## BeautifulSoup + lxml (Future Collection Phase)
+
+Will be responsible for:
+
+* HTML cleanup
+* Content extraction
+* Structured job descriptions
 
 ## CrewAI (Future Phase)
 
-CrewAI is planned for future versions of the project.
+Planned for:
 
-It will be used for:
-
-- Multi-agent orchestration
-- Task delegation
-- Advanced planning workflows
-
-The first versions focus on building robust tools and a solid agent foundation before introducing multi-agent architectures.
+* Multi-agent orchestration
+* Task delegation
+* Planning workflows
+* Advanced autonomous reasoning
 
 ---
 
@@ -162,43 +230,35 @@ The first versions focus on building robust tools and a solid agent foundation b
 autonomous-career-scout/
 
 ├── data/
+│   ├── candidates/
+│   ├── resumes/
+│   └── jobs/
+│
+├── database/
+│   ├── connection.py
+│   ├── scripts/
+│   └── examples/
+│
 ├── docs/
 ├── reports/
 │
 ├── src/
 │   ├── agents/
-│   │   └── career_scout_agent.py
+│   │   ├── candidate_agent.py
+│   │   ├── recruiter_agent.py
+│   │   ├── match_analyst_agent.py
+│   │   ├── career_advisor_agent.py
+│   │   ├── decision_agent.py
+│   │   └── opportunity_analysis_agent.py
 │   │
 │   ├── models/
-│   │   ├── candidate_profile.py
-│   │   ├── job_posting.py
-│   │   ├── job_match_result.py
-│   │   └── search_criteria.py
-│   │
 │   ├── services/
-│   │   ├── cv_parser.py
-│   │   ├── job_parser.py
-│   │   ├── profile_service.py
-│   │   ├── job_matcher.py
-│   │   ├── openai_analyzer.py
-│   │   └── report_generator.py
-│   │
-│   ├── tools/
-│   │   ├── playwright_client.py
-│   │   ├── scraper_tool.py
-│   │   ├── indeed_tool.py
-│   │   ├── linkedin_tool.py
-│   │   └── google_jobs_tool.py
-│   │
-│   ├── repositories/
-│   │   ├── jobs_repository.py
-│   │   ├── matches_repository.py
-│   │   └── executions_repository.py
-│   │
-│   ├── prompts/
-│   └── tasks/
+│   ├── reporting/
+│   ├── openai/
+│   └── config/
 │
 ├── tests/
+├── docker-compose.yml
 ├── .env.example
 ├── requirements.txt
 ├── README.md
@@ -209,44 +269,62 @@ autonomous-career-scout/
 
 # Current Status
 
-🚧 In Development
+✅ Phase 1 - Analysis Engine (Completed)
 
-Current focus:
+* Resume Parser
+* Job Parser
+* Match Engine
+* Career Recommendation Engine
+* Decision Analysis
+* Opportunity Analysis
+* Report Generation
 
-- Playwright navigation
-- Job content extraction
-- Job parsing
-- Candidate profile matching
-- Agent reasoning foundations
+✅ Phase 2 - AI & Persistence (Completed)
 
----
+* OpenAI Integration
+* PostgreSQL Integration
+* Docker Infrastructure
+* Persistence Layer
+* Database Validation
+* Historical Storage Foundation
 
-# Future Roadmap
+🚧 Phase 3 - Historical Intelligence (Next)
 
-## Phase 1
+Planned:
 
-- Indeed integration
-- Job parsing
-- Match engine
-- Markdown reports
+* Execution history
+* Opportunity history
+* Skill gap tracking
+* Career trend analysis
+* Historical insights
 
-## Phase 2
+🚧 Phase 4 - Playwright Collectors
 
-- OpenAI-powered recommendations
-- PostgreSQL persistence
-- Historical analysis
+Planned:
 
-## Phase 3
+* LinkedIn Collector
+* Indeed Collector
+* Monster Collector
+* Job normalization
+* Database integration
 
-- CareerScoutAgent orchestration
-- Autonomous reasoning loops
-- Multi-source job discovery
+🚧 Phase 5 - Autonomous Career Scout
 
-## Phase 4
+Planned:
 
-- CrewAI integration
-- Multi-agent workflows
-- Advanced career recommendations
+* Autonomous reasoning loops
+* Tool selection
+* Goal-driven execution
+* Multi-source discovery
+
+🚧 Phase 6 - Multi-Agent Platform
+
+Planned:
+
+* CrewAI integration
+* Agent collaboration
+* Advanced planning
+* Career intelligence workflows
 
 ---
 
@@ -257,31 +335,59 @@ User:
 Find remote QA jobs in Canada
 
 CareerScoutAgent:
-↓
+
+Searching LinkedIn...
+Found 23 jobs
 
 Searching Indeed...
-Searching LinkedIn...
-Searching Company Sites...
+Found 41 jobs
 
-↓
+Searching Monster...
+Found 17 jobs
 
-47 jobs found
-
-↓
-
-Analyzing opportunities...
-
-↓
+Analyzing 81 opportunities...
 
 Top Matches:
 
-1. Senior QA Engineer (91%)
-2. Playwright Automation Engineer (87%)
-3. SDET (83%)
+1. Senior QA Automation Engineer
+   Score: 92%
 
-↓
+2. SDET Playwright
+   Score: 89%
 
-Generating report...
+3. Salesforce QA Engineer
+   Score: 81%
+
+Generating recommendations...
+
+Saving results...
+
+Execution completed.
+```
+
+---
+
+# Long-Term Vision
+
+```text
+User Goal
+    │
+    ▼
+CareerScoutAgent
+    │
+    ├── Search Tool
+    ├── Collection Tool
+    ├── Parsing Tool
+    ├── Match Tool
+    ├── OpenAI Analysis Tool
+    ├── Persistence Tool
+    └── Reporting Tool
+    │
+    ▼
+PostgreSQL
+    │
+    ▼
+Career Intelligence Platform
 ```
 
 ---
@@ -290,78 +396,6 @@ Generating report...
 
 This project is intended for educational, research, and portfolio purposes.
 
-The focus is on Agentic AI, autonomous reasoning, decision-making, and career opportunity analysis rather than automated job applications.
+The focus is on Agentic AI, autonomous reasoning, decision-making, career intelligence, and opportunity analysis.
 
-
-
-
-SearchAgent
-↓
-LinkedIn
-
-SearchAgent
-↓
-Indeed
-
-SearchAgent
-↓
-Monster
-
-↓
-Job Collection
-
-↓
-RecruiterAgent
-
-↓
-JobPosting[]
-
-↓
-CandidateAgent
-
-↓
-CandidateProfile
-
-↓
-MatchAnalystAgent
-
-↓
-CareerAdvisorAgent
-
-↓
-DecisionAgent
-
-↓
-Ranked Opportunities
-
-
- Next =>
- Searching LinkedIn...
-
-Found 23 jobs
-
-Searching Indeed...
-
-Found 41 jobs
-
-Searching Monster...
-
-Found 17 jobs
-
-Next =>
-Analyzing 81 opportunities...
-
-Next =>
-TOP OPPORTUNITIES
-
-1.
-Senior QA Automation Engineer
-Score: 92%
-
-2.
-SDET Playwright
-Score: 89%
-
-3.
-Salesforce QA Engineer
-Score: 81%
+The project does not automate job applications and is designed to assist users in making informed career decisions.
