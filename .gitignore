@@ -1,51 +1,70 @@
 # =========================
+
 # Python
+
 # =========================
 
-__pycache__/
+**pycache**/
 *.py[cod]
 *$py.class
+*.pyo
+*.pyd
 
 # Virtual Environment
+
 venv/
 .venv/
 env/
 
 # =========================
+
 # Environment Variables
+
 # =========================
 
 .env
+.env.*
+!.env.example
 
 # =========================
+
 # IDE
+
 # =========================
 
 .vscode/
 .idea/
 
 # =========================
+
 # Operating System
+
 # =========================
 
 .DS_Store
 Thumbs.db
 
 # =========================
+
 # Pytest
+
 # =========================
 
 .pytest_cache/
 
 # =========================
+
 # Coverage
+
 # =========================
 
 .coverage
 htmlcov/
 
 # =========================
+
 # Playwright
+
 # =========================
 
 playwright/screenshots/*
@@ -55,29 +74,67 @@ playwright/auth/*
 !playwright/auth/.gitkeep
 
 # =========================
+
 # Reports
+
 # =========================
 
 reports/*
 !reports/.gitkeep
 
 # =========================
+
 # Temporary Files
+
 # =========================
 
 *.log
 *.tmp
 
 # =========================
+
 # Build
+
 # =========================
 
 dist/
 build/
 
 # =========================
+
 # Local Job Data
+
 # =========================
 
 data/jobs/*
 !data/jobs/.gitkeep
+
+# =========================
+
+# Personal Data
+
+# =========================
+
+data/resumes/*
+!data/resumes/.gitkeep
+
+data/candidates/*
+!data/candidates/.gitkeep
+
+# =========================
+
+# SQLTools / Local Sessions
+
+# =========================
+
+*.session.sql
+
+# =========================
+
+# Database Backups
+
+# =========================
+
+*.dump
+*.backup
+*.sql.bak

@@ -1,77 +1,49 @@
-from src.models.candidate_profile import CandidateProfile
+from src.models.match_result import MatchResult
 from src.models.job_posting import JobPosting
+from src.models.candidate_profile import CandidateProfile
 
 
 class JobMatcher:
 
-    SKILL_ALIASES = {
-        "Salesforce CPQ": [
-            "Salesforce"
-        ]
-    }
-
-    def calculate_match(
+    def match(
         self,
         candidate: CandidateProfile,
         job: JobPosting
-    ) -> dict:
+    ) -> MatchResult:
 
         matched_skills = []
 
         missing_skills = []
 
+        candidate_skills = {
+            skill.lower()
+            for skill in candidate.skills
+        }
+
         for skill in job.skills:
 
-            matched = False
+            if skill.lower() in candidate_skills:
 
-            for candidate_skill in candidate.skills:
+                matched_skills.append(skill)
 
-                if skill.lower() in candidate_skill.lower():
-
-                    matched = True
-
-                    matched_skills.append(skill)
-
-                    break
-
-            if not matched:
-
-                aliases = self.SKILL_ALIASES.get(
-                    skill,
-                    []
-                )
-
-                for alias in aliases:
-
-                    for candidate_skill in candidate.skills:
-
-                        if alias.lower() in candidate_skill.lower():
-
-                            matched = True
-
-                            matched_skills.append(skill)
-
-                            break
-
-                    if matched:
-                        break
-
-            if not matched:
+            else:
 
                 missing_skills.append(skill)
 
         total_skills = len(job.skills)
 
-        score = 0
+        if total_skills == 0:
 
-        if total_skills > 0:
+            score = 0
 
-            score = round(
+        else:
+
+            score = int(
                 (len(matched_skills) / total_skills) * 100
             )
 
-        return {
-            "score": score,
-            "matched_skills": matched_skills,
-            "missing_skills": missing_skills
-        }
+        return MatchResult(
+            score=score,
+            matched_skills=matched_skills,
+            missing_skills=missing_skills
+        )

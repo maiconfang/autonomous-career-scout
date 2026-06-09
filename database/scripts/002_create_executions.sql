@@ -1,0 +1,4 @@
+CREATE TABLE executions (
+    id SERIAL PRIMARY KEY,
+    execution_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -291,3 +291,77 @@ Generating report...
 This project is intended for educational, research, and portfolio purposes.
 
 The focus is on Agentic AI, autonomous reasoning, decision-making, and career opportunity analysis rather than automated job applications.
+
+
+
+
+SearchAgent
+↓
+LinkedIn
+
+SearchAgent
+↓
+Indeed
+
+SearchAgent
+↓
+Monster
+
+↓
+Job Collection
+
+↓
+RecruiterAgent
+
+↓
+JobPosting[]
+
+↓
+CandidateAgent
+
+↓
+CandidateProfile
+
+↓
+MatchAnalystAgent
+
+↓
+CareerAdvisorAgent
+
+↓
+DecisionAgent
+
+↓
+Ranked Opportunities
+
+
+ Next =>
+ Searching LinkedIn...
+
+Found 23 jobs
+
+Searching Indeed...
+
+Found 41 jobs
+
+Searching Monster...
+
+Found 17 jobs
+
+Next =>
+Analyzing 81 opportunities...
+
+Next =>
+TOP OPPORTUNITIES
+
+1.
+Senior QA Automation Engineer
+Score: 92%
+
+2.
+SDET Playwright
+Score: 89%
+
+3.
+Salesforce QA Engineer
+Score: 81%

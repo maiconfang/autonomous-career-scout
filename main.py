@@ -1,49 +1,261 @@
-from src.services.job_matcher import JobMatcher
-from src.services.job_parser import JobParser
-from src.services.profile_service import ProfileService
-from src.tools.playwright_client import PlaywrightClient
-from src.tools.scraper_tool import ScraperTool
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from src.agents.recruiter_agent import RecruiterAgent
+from src.agents.candidate_agent import CandidateAgent
+from src.agents.match_analyst_agent import MatchAnalystAgent
+from src.agents.career_advisor_agent import CareerAdvisorAgent
+from src.agents.decision_agent import DecisionAgent
+from src.agents.opportunity_analysis_agent import OpportunityAnalysisAgent
+
+from src.services.job_loader import JobLoader
+from src.reporting.report_generator import ReportGenerator
+from src.openai.opportunity_explainer import OpportunityExplainer
+
+from src.services.opportunity_persistence_service import (
+    OpportunityPersistenceService
+)
 
 
 def main():
 
-    playwright_client = PlaywrightClient()
+    recruiter_agent = RecruiterAgent()
 
-    scraper_tool = ScraperTool()
+    candidate_agent = CandidateAgent()
 
-    job_parser = JobParser()
+    match_analyst_agent = MatchAnalystAgent()
 
-    profile_service = ProfileService()
+    career_advisor_agent = CareerAdvisorAgent()
 
-    job_matcher = JobMatcher()
+    decision_agent = DecisionAgent()
 
-    html = playwright_client.get_page_content(
-        "https://ca.indeed.com/viewjob?jk=8cc5df99bb9e0fe2"
+    opportunity_analysis_agent = OpportunityAnalysisAgent()
+
+    opportunity_explainer = OpportunityExplainer()
+
+    report_generator = ReportGenerator()
+    
+    opportunity_persistence_service = (
+    OpportunityPersistenceService()
     )
 
-    text = scraper_tool.extract_text(
-        html
+    job_loader = JobLoader()
+
+    candidate = candidate_agent.analyze()
+
+    jobs = job_loader.load_jobs()
+
+    results = []
+
+    for file_name, job_text in jobs:
+
+        print(
+            f"\nProcessing job: {file_name}"
+        )
+
+        job = recruiter_agent.analyze(
+            job_text
+        )
+
+        match_result = match_analyst_agent.analyze(
+            candidate,
+            job
+        )
+
+        recommendation = career_advisor_agent.analyze(
+            match_result
+        )
+
+        decision = decision_agent.analyze(
+            match_result,
+            recommendation
+        )
+
+        opportunity_analysis = (
+            opportunity_analysis_agent.analyze(
+                match_result
+            )
+        )
+
+        results.append(
+            {
+                "file_name": file_name,
+                "job": job,
+                "match_result": match_result,
+                "recommendation": recommendation,
+                "decision": decision,
+                "opportunity_analysis": opportunity_analysis
+            }
+        )
+
+    results.sort(
+        key=lambda item: item["match_result"].score,
+        reverse=True
     )
 
-    job_posting = job_parser.parse(
-        text
+    print("\n")
+    print("=" * 80)
+    print("TOP OPPORTUNITIES")
+    print("=" * 80)
+
+    for index, result in enumerate(
+        results,
+        start=1
+    ):
+
+        analysis = result[
+            "opportunity_analysis"
+        ]
+
+        print(
+            f"\n#{index} - {result['file_name']}"
+        )
+
+        print(
+            f"Score: {analysis.score}"
+        )
+
+        print("\nMatched Skills:")
+
+        if analysis.matched_skills:
+
+            for skill in analysis.matched_skills:
+
+                print(
+                    f"  ✓ {skill}"
+                )
+
+        else:
+
+            print(
+                "  None"
+            )
+
+        print("\nMissing Skills:")
+
+        if analysis.missing_skills:
+
+            for skill in analysis.missing_skills:
+
+                print(
+                    f"  ✗ {skill}"
+                )
+
+        else:
+
+            print(
+                "  None"
+            )
+
+        print("\nTop Strengths:")
+
+        if analysis.strengths:
+
+            for strength in analysis.strengths:
+
+                print(
+                    f"  ✓ {strength}"
+                )
+
+        else:
+
+            print(
+                "  None"
+            )
+
+        print("\nTop Gaps:")
+
+        if analysis.weaknesses:
+
+            for weakness in analysis.weaknesses:
+
+                print(
+                    f"  ✗ {weakness}"
+                )
+
+        else:
+
+            print(
+                "  None"
+            )
+
+        print("\nRecommendation:")
+
+        print(
+            analysis.recommendation
+        )
+
+        print(
+            f"\nDecision: {result['decision'].decision}"
+        )
+
+        print(
+            f"Confidence: {result['decision'].confidence}"
+        )
+
+        print(
+            f"Reason: {result['decision'].reason}"
+        )
+
+        print("\n" + "-" * 80)
+
+    report_generator.generate(
+        results
+    )
+    
+    opportunity_persistence_service.save_from_json(
+        "reports/opportunities.json"
     )
 
-    candidate_profile = profile_service.load_profile()
+    top_opportunity = results[0]
 
-    match_result = job_matcher.calculate_match(
-        candidate_profile,
-        job_posting
+    ai_result = (
+        opportunity_explainer.explain(
+            top_opportunity[
+                "opportunity_analysis"
+            ]
+        )
     )
 
-    print("\n=== JOB ===")
-    print(job_posting)
+    print("\n")
+    print("=" * 80)
+    print("AI EXPLANATION")
+    print("=" * 80)
 
-    print("\n=== CANDIDATE ===")
-    print(candidate_profile)
+    print(
+        ai_result["explanation"]
+    )
 
-    print("\n=== MATCH RESULT ===")
-    print(match_result)
+    print("\n")
+    print("=" * 80)
+    print("OPENAI METRICS")
+    print("=" * 80)
+
+    print(
+        f"Model: {ai_result['model']}"
+    )
+
+    print(
+        f"Prompt Tokens: {ai_result['prompt_tokens']}"
+    )
+
+    print(
+        f"Completion Tokens: {ai_result['completion_tokens']}"
+    )
+
+    print(
+        f"Total Tokens: {ai_result['total_tokens']}"
+    )
+
+    estimated_cost = (
+        ai_result["total_tokens"]
+        * 0.000001
+    )
+
+    print(
+        f"Estimated Cost: ${estimated_cost:.6f}"
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,22 @@
+services:
+
+  postgres:
+    image: postgres:17
+
+    container_name: autonomous-career-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: career_scout
+      POSTGRES_USER: career_user
+      POSTGRES_PASSWORD: career_password
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

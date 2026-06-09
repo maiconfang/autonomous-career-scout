@@ -1,4 +1,5 @@
 from src.models.job_posting import JobPosting
+from src.config.skills import KNOWN_SKILLS
 
 
 class JobParser:
@@ -18,16 +19,17 @@ class JobParser:
             if line.strip()
         ]
 
-        for index, line in enumerate(lines):
+        # Title
 
-            if line == "Salesforce CPQ Tester":
+        if len(lines) > 0:
+            title = lines[0]
 
-                title = line
+        # Company
 
-                if index + 1 < len(lines):
-                    company = lines[index + 1]
+        if len(lines) > 1:
+            company = lines[1]
 
-                break
+        # Location
 
         for line in lines:
 
@@ -37,6 +39,8 @@ class JobParser:
 
                 break
 
+        # Salary
+
         for line in lines:
 
             if "$" in line:
@@ -45,20 +49,17 @@ class JobParser:
 
                 break
 
-        known_skills = [
-            "Salesforce CPQ",
-            "Selenium",
-            "Provar",
-            "Apex",
-            "Visualforce",
-            "Lightning"
-        ]
+        # Skills
 
-        for skill in known_skills:
+        for skill in KNOWN_SKILLS:
 
             if skill.lower() in text.lower():
 
                 skills.append(skill)
+
+        print("\n=== JOB PARSER ===")
+        print(f"Title: {title}")
+        print(f"Skills found: {skills}")
 
         return JobPosting(
             title=title,
