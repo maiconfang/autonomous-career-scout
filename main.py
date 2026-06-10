@@ -13,9 +13,9 @@ from src.services.job_loader import JobLoader
 from src.reporting.report_generator import ReportGenerator
 from src.openai.opportunity_explainer import OpportunityExplainer
 
-from src.services.opportunity_persistence_service import (
-    OpportunityPersistenceService
-)
+from src.services.opportunity_persistence_service import ( OpportunityPersistenceService )
+
+from src.services.execution_service import (ExecutionService )
 
 
 def main():
@@ -35,9 +35,13 @@ def main():
     opportunity_explainer = OpportunityExplainer()
 
     report_generator = ReportGenerator()
-    
+
+    execution_service = (
+        ExecutionService()
+    )
+
     opportunity_persistence_service = (
-    OpportunityPersistenceService()
+        OpportunityPersistenceService()
     )
 
     job_loader = JobLoader()
@@ -200,13 +204,18 @@ def main():
 
         print("\n" + "-" * 80)
 
-    report_generator.generate(
-        results
-    )
-    
-    opportunity_persistence_service.save_from_json(
-        "reports/opportunities.json"
-    )
+        report_generator.generate(
+            results
+        )
+
+        execution_id = (
+            execution_service.create_execution()
+        )
+
+        opportunity_persistence_service.save_from_json(
+            "reports/opportunities.json",
+            execution_id
+        )
 
     top_opportunity = results[0]
 

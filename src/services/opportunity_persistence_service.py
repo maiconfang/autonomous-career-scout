@@ -5,12 +5,22 @@ from database.connection import get_connection
 
 class OpportunityPersistenceService:
 
-    def save_from_json(self, file_path: str) -> None:
+    def save_from_json(
+        self,
+        file_path: str,
+        execution_id: int
+    ) -> None:
 
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(
+            file_path,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
             opportunities = json.load(file)
 
         connection = get_connection()
+
         cursor = connection.cursor()
 
         for opportunity in opportunities:
@@ -18,6 +28,7 @@ class OpportunityPersistenceService:
             cursor.execute(
                 """
                 INSERT INTO opportunity_analysis (
+                    execution_id,
                     job_file,
                     score,
                     recommendation,
@@ -31,28 +42,39 @@ class OpportunityPersistenceService:
                 )
                 VALUES (
                     %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s
                 )
                 """,
                 (
+                    execution_id,
                     opportunity["job_file"],
                     opportunity["score"],
                     opportunity["recommendation"],
                     opportunity["decision"],
                     opportunity["confidence"],
                     opportunity["reason"],
-                    json.dumps(opportunity["matched_skills"]),
-                    json.dumps(opportunity["missing_skills"]),
-                    json.dumps(opportunity["strengths"]),
-                    json.dumps(opportunity["weaknesses"])
+                    json.dumps(
+                        opportunity["matched_skills"]
+                    ),
+                    json.dumps(
+                        opportunity["missing_skills"]
+                    ),
+                    json.dumps(
+                        opportunity["strengths"]
+                    ),
+                    json.dumps(
+                        opportunity["weaknesses"]
+                    )
                 )
             )
 
         connection.commit()
 
         cursor.close()
+
         connection.close()
 
         print(
-            f"{len(opportunities)} opportunities saved successfully!"
+            f"{len(opportunities)} opportunities saved successfully "
+            f"for execution #{execution_id}!"
         )
