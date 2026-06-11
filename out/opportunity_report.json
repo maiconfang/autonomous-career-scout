@@ -1,0 +1,31 @@
+{
+    "linkedin_job_id": "4427557644",
+    "title": "Software Engineer in Test",
+    "company": "Applicantz",
+    "score": 75,
+    "matched_skills": [
+        "Cypress",
+        "Java",
+        "TypeScript",
+        "JavaScript",
+        "Node.js",
+        "CI/CD"
+    ],
+    "missing_skills": [
+        "REST API",
+        "AWS"
+    ],
+    "strengths": [
+        "Cypress",
+        "Java",
+        "TypeScript"
+    ],
+    "weaknesses": [
+        "REST API",
+        "AWS"
+    ],
+    "recommendation": "Good opportunity. Consider improving REST API to increase competitiveness.",
+    "decision": "APPLY",
+    "confidence": "MEDIUM",
+    "reason": "Moderate match detected (75%). The candidate has relevant experience but should address some skill gaps."
+}

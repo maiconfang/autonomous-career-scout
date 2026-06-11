@@ -6,13 +6,10 @@ from src.config.search_profiles import (
     QA_CANADA
 )
 
-<<<<<<< HEAD
-=======
 from src.services.job_enrichment_service import (
     JobEnrichmentService
 )
 
->>>>>>> 08bda95 (feat(agentic-ai): implement Opportunity Intelligence Crew with PostgreSQL persistence)
 
 def main():
 
@@ -20,12 +17,6 @@ def main():
         LinkedInAuthenticatedCollector()
     )
 
-<<<<<<< HEAD
-    collector.collect(
-        criteria=QA_CANADA
-    )
-
-=======
     jobs = collector.collect(
         criteria=QA_CANADA
     )
@@ -65,7 +56,6 @@ def main():
             f"SKILLS FOUND: {job.skills}"
         )
 
->>>>>>> 08bda95 (feat(agentic-ai): implement Opportunity Intelligence Crew with PostgreSQL persistence)
 
 if __name__ == "__main__":
     main()

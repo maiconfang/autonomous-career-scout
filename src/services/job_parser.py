@@ -69,3 +69,19 @@ class JobParser:
             skills=skills,
             description=text
         )
+        
+        
+    def extract_skills(
+        self,
+        text: str
+    ) -> list[str]:
+
+        skills = []
+
+        for skill in KNOWN_SKILLS:
+
+            if skill.lower() in text.lower():
+
+                skills.append(skill)
+
+        return skills

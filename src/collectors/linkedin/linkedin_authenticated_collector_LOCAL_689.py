@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-from posthog import page
 
 from src.models.job_posting import JobPosting
 from src.models.search_criteria import SearchCriteria
@@ -14,10 +13,6 @@ from src.services.linkedin_url_builder import (
 
 from src.exporters.job_exporter import (
     JobExporter
-)
-
-from src.services.job_skill_extractor import (
-    JobSkillExtractor
 )
 
 
@@ -39,21 +34,13 @@ class LinkedInAuthenticatedCollector:
         "LinkedIn Corporation ©",
         "Try Premium",
     ]
-
+    
     def scroll_until_loaded(
         self,
         page
     ):
 
-        jobs_panel = page.locator(
-            ".scaffold-layout__list"
-        )
-
-        jobs_panel.hover()
-
         previous_count = 0
-
-        no_change_attempts = 0
 
         while True:
 
@@ -67,19 +54,6 @@ class LinkedInAuthenticatedCollector:
 
             if current_count == previous_count:
 
-                no_change_attempts += 1
-
-                print(
-                    f"No new jobs found "
-                    f"({no_change_attempts}/3)"
-                )
-
-            else:
-
-                no_change_attempts = 0
-
-            if no_change_attempts >= 3:
-
                 print(
                     "\nAll jobs loaded."
                 )
@@ -90,11 +64,11 @@ class LinkedInAuthenticatedCollector:
 
             page.mouse.wheel(
                 0,
-                800
+                10000
             )
 
             page.wait_for_timeout(
-                1500
+                2000
             )
 
     def collect(
@@ -107,7 +81,7 @@ class LinkedInAuthenticatedCollector:
         with sync_playwright() as p:
 
             browser = p.chromium.launch(
-                headless=True
+                headless=False
             )
 
             context = browser.new_context(
@@ -130,10 +104,10 @@ class LinkedInAuthenticatedCollector:
                 wait_until="domcontentloaded"
             )
 
-            page.wait_for_selector(
-                "[data-occludable-job-id]"
+            page.wait_for_timeout(
+                8000
             )
-
+            
             self.scroll_until_loaded(
                 page
             )
@@ -145,7 +119,7 @@ class LinkedInAuthenticatedCollector:
             print(page.title())
 
             job_cards = page.locator(
-               "[data-occludable-job-id]"
+                 "[componentkey*='job-card-component-ref']"
             )
 
             total_cards = job_cards.count()
@@ -159,7 +133,7 @@ class LinkedInAuthenticatedCollector:
             )
 
             for i in range(total_cards):
-
+                
                 print(
                     f"\nProcessing card {i + 1}/{total_cards}"
                 )
@@ -167,76 +141,25 @@ class LinkedInAuthenticatedCollector:
                 try:
 
                     card = job_cards.nth(i)
-                    
-                    card.click()
-
-                    page.wait_for_timeout(3000)
-                    
-                    print("\nDETAIL PANEL FOUND:")
-
-                    print(
-                        page.locator(
-                            "#job-details"
-                        ).count()
-                    )
-                    
-                    description = (
-                        page
-                        .locator("#job-details")
-                        .text_content()
-                    )
-
-                    print(
-                        f"\nDESCRIPTION LENGTH: {len(description)}"
-                    )
-                    
-                    if not card.locator(
-                        ".job-card-list__title--link"
-                    ).count():
-                        continue
 
                     title = ""
 
                     company = ""
 
                     location = ""
-                    
-                    job_url = ""
 
                     try:
 
- 
-                        title_locator = card.locator(
-                            ".job-card-list__title--link"
-                        ).first
-
                         title = (
-                            title_locator.text_content() or ""
-                        ).strip()
-
-                        href = title_locator.get_attribute(
-                            "href"
+                            card
+                            .locator(
+                                ".job-card-list__title--link"
+                            )
+                            .first
+                            .inner_text()
+                            .strip()
                         )
 
-                        job_url = ""
-
-                        if href:
-
-                            job_url = (
-                                "https://www.linkedin.com"
-                                + href
-                            )
-
-                        linkedin_job_id = ""
-
-                        if "/jobs/view/" in job_url:
-
-                            linkedin_job_id = (
-                                job_url
-                                .split("/jobs/view/")[1]
-                                .split("/")[0]
-                                .split("?")[0]
-                            )
                     except:
                         pass
 
@@ -248,8 +171,9 @@ class LinkedInAuthenticatedCollector:
                                 ".artdeco-entity-lockup__subtitle"
                             )
                             .first
-                            .text_content() or ""
-                        ).strip()
+                            .inner_text()
+                            .strip()
+                        )
 
                     except:
                         pass
@@ -262,8 +186,9 @@ class LinkedInAuthenticatedCollector:
                                 ".artdeco-entity-lockup__caption"
                             )
                             .first
-                            .text_content() or ""
-                        ).strip()
+                            .inner_text()
+                            .strip()
+                        )
 
                     except:
                         pass
@@ -292,30 +217,14 @@ class LinkedInAuthenticatedCollector:
                     print(
                         f"LOCATION: {location}"
                     )
-                    
-                    print(
-                        f"JOB ID: {linkedin_job_id}"
-                    )
-                    
-                    skills = (
-                        JobSkillExtractor.extract(
-                            description
-                        )
-                    )
-
-                    print(
-                        f"SKILLS: {skills}"
-                    )
 
                     job = JobPosting(
                         title=title,
                         company=company,
                         location=location,
                         salary="",
-                        skills=skills,
-                        description=description,
-                        job_url=job_url,
-                        linkedin_job_id=linkedin_job_id
+                        skills=[],
+                        description=""
                     )
 
                     jobs.append(

@@ -1,53 +1,59 @@
-from src.models.match_result import MatchResult
-from src.models.career_recommendation import CareerRecommendation
+from src.services.opportunity_query_service import (
+    OpportunityQueryService
+)
 
 
 class CareerAdvisorAgent:
 
-    def analyze(
-        self,
-        match_result: MatchResult
-    ) -> CareerRecommendation:
+    def __init__(self):
 
-        print("[CareerAdvisorAgent] Generating recommendations...")
-
-        strengths = match_result.matched_skills
-
-        improvement_areas = match_result.missing_skills
-
-        recommended_actions = []
-
-        for skill in improvement_areas:
-
-            recommended_actions.append(
-                f"Study {skill}"
-            )
-
-        if match_result.score >= 80:
-
-            summary = (
-                "Excellent match. The candidate already meets most requirements."
-            )
-
-        elif match_result.score >= 50:
-
-            summary = (
-                "Good match. Some improvements may increase competitiveness."
-            )
-
-        else:
-
-            summary = (
-                "Partial match. Several important skills should be developed."
-            )
-
-        recommendation = CareerRecommendation(
-            summary=summary,
-            strengths=strengths,
-            improvement_areas=improvement_areas,
-            recommended_actions=recommended_actions
+        self.query_service = (
+            OpportunityQueryService()
         )
 
-        print("[CareerAdvisorAgent] Analysis completed.")
+    def advise(self):
 
-        return recommendation
+        jobs = (
+            self.query_service.get_top_5_jobs()
+        )
+
+        print()
+
+        print("=" * 40)
+        print("CAREER ADVISOR")
+        print("=" * 40)
+
+        for index, job in enumerate(
+            jobs,
+            start=1
+        ):
+
+            print()
+
+            print(
+                f"{index}. {job[2]}"
+            )
+
+            print(
+                f"Company: {job[3]}"
+            )
+
+            print(
+                f"Location: {job[4]}"
+            )
+
+            print(
+                f"Score: {job[8]}"
+            )
+
+            print(
+                f"Recommendation: {job[9]}"
+            )
+
+            print(
+                f"Job ID: {job[1]}"
+            )
+
+            print(
+                f"URL: {job[5]}"
+            )

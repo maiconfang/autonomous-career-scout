@@ -6,6 +6,11 @@ The long-term vision is to build a career intelligence platform capable of colle
 
 ---
 
+# Terminal - VS Code
+tree src /A /F > src-tree.txt
+
+---
+
 # Vision
 
 Example goal:
@@ -168,6 +173,20 @@ Responsible for:
 * Match history
 * Execution history
 * Future memory layer
+
+### PostgreSQL Querys
+TRUNCATE TABLE
+    opportunity_analysis,
+    executions,
+    opportunities
+RESTART IDENTITY CASCADE;
+
+
+SELECT COUNT(*) FROM opportunities;
+
+SELECT COUNT(*) FROM executions;
+
+SELECT COUNT(*) FROM opportunity_analysis;
 
 ## Docker
 
