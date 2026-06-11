@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-from src.config.search_profiles import (
-    QA_CANADA
-)
-
-from src.services.linkedin_url_builder import (
-    LinkedInUrlBuilder
-)
-
-
-url = LinkedInUrlBuilder.build(
-    QA_CANADA
-)
-
-print("\nGenerated URL:\n")
-
-print(url)
-=======
 from playwright.sync_api import sync_playwright
 
 from src.config.search_profiles import QA_CANADA
@@ -85,4 +67,3 @@ def main():
 
 if __name__ == "__main__":
     main()
->>>>>>> 08bda95 (feat(agentic-ai): implement Opportunity Intelligence Crew with PostgreSQL persistence)
